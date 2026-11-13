@@ -1,0 +1,24 @@
+{
+  "passed": 15,
+  "failed": 0,
+  "bugs": [],
+  "action_items": [],
+  "retest_needed": false,
+  "checks": [
+    {"criterion":"Autenticação demo com perfis administrador e operador","name":"demo-auth-profiles","lane":"browser","status":"passed","evidence":"Public preview login accepted admin and operator credentials; role badges showed Administrador and Operador."},
+    {"criterion":"Autenticação demo com perfis administrador e operador","name":"test_tscheck_auth","lane":"backend","status":"passed","evidence":"Live HTTP suite: POST /api/auth/login returned 200 for both demo roles; invalid password returned 401; /api/auth/me returned 200."},
+    {"criterion":"Dashboard de decisão","name":"admin-login-dashboard","lane":"browser","status":"passed","evidence":"Public preview rendered KPI cards, demand chart, replenishment alerts, stock health, and recent movements after admin login."},
+    {"criterion":"Dashboard de decisão","name":"test_tscheck_dashboard","lane":"backend","status":"passed","evidence":"Live HTTP suite: GET /api/dashboard returned 200 with KPI fields, stock distribution, demand points, critical products, and recent movements."},
+    {"criterion":"Cadastro e consulta de produtos","name":"admin-creates-product","lane":"browser","status":"passed","evidence":"Admin created a unique tscheck fixture SKU and its product table row displayed with Saudável status; rerun-safe fixture produced no console error."},
+    {"criterion":"Cadastro e consulta de produtos","name":"test_tscheck_products","lane":"backend","status":"passed","evidence":"Live HTTP suite: POST /api/products returned 200 for unique fixture, GET /api/products contained its returned id, and duplicate SKU returned 409."},
+    {"criterion":"Entradas e saídas de estoque","name":"movement-updates-history","lane":"browser","status":"passed","evidence":"UI registered a tscheck entrada movement and displayed its reason in movement history."},
+    {"criterion":"Entradas e saídas de estoque","name":"test_tscheck_movements","lane":"backend","status":"passed","evidence":"Live HTTP suite: POST /api/movements returned 200, GET /api/products reflected increased stock, and negative stock returned 422."},
+    {"criterion":"Previsão estatística e recomendações","name":"forecast-recommendations","lane":"browser","status":"passed","evidence":"Forecast page showed model explanation and recommendations table; period selector changed unambiguously to 30 dias."},
+    {"criterion":"Previsão estatística e recomendações","name":"test_tscheck_forecast","lane":"backend","status":"passed","evidence":"Live HTTP suite: GET /api/forecast?days=7,15,30,60 returned 200 with model data; invalid 8-day horizon returned 422."},
+    {"criterion":"Permissões por perfil","name":"operator-role-permissions","lane":"browser","status":"passed","evidence":"Operator UI showed products while Novo produto was absent and import dropzone was disabled with admin-only messaging."},
+    {"criterion":"Permissões por perfil","name":"test_tscheck_permissions","lane":"backend","status":"passed","evidence":"Live HTTP suite: operator GET /api/products and /api/dashboard returned 200; product creation and import returned 403."},
+    {"criterion":"Importação e exportação CSV","name":"csv-import-export","lane":"browser","status":"passed","evidence":"Admin downloaded the CSV template, selected CSV, saw preview, received POST /api/import/products status 200, and found the imported fixture row."},
+    {"criterion":"Importação e exportação CSV","name":"test_tscheck_import","lane":"backend","status":"passed","evidence":"Live HTTP suite: admin POST /api/import/products returned 200 with imported=1 and GET /api/products contained the imported fixture SKU."},
+    {"criterion":"Responsividade e ausência de erros críticos","name":"responsive-main-flow","lane":"browser","status":"passed","evidence":"Desktop 1280x720 login, dashboard, theme toggle, and products navigation rendered without blank screen or failed check."}
+  ]
+}

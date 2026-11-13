@@ -1,0 +1,26 @@
+{
+  "passed": 13,
+  "failed": 0,
+  "bugs": [],
+  "action_items": [
+    "forecast-recommendations and csv-import-export initially failed due test assertions (strict duplicate text locator and transient toast text); each passed after one script correction/rerun and is classified flaky per policy."
+  ],
+  "retest_needed": true,
+  "checks": [
+    {"criterion":"Autenticação demo com perfis administrador e operador","name":"demo-auth-profiles","lane":"browser","status":"passed","evidence":"UI login accepted admin and operator credentials; role badge showed Administrador then Operador."},
+    {"criterion":"Autenticação demo com perfis administrador e operador","name":"test_tscheck_auth","lane":"backend","status":"passed","evidence":"POST /api/auth/login returned 200 for both demo roles; invalid password returned 401; /api/auth/me returned 200."},
+    {"criterion":"Dashboard de decisão","name":"admin-login-dashboard","lane":"browser","status":"passed","evidence":"Public preview rendered KPI cards, demand chart, replenishment alerts, stock health, and recent movements after login."},
+    {"criterion":"Dashboard de decisão","name":"test_tscheck_dashboard","lane":"backend","status":"passed","evidence":"GET /api/dashboard returned 200 with KPI fields, stock_distribution, 7 demand points, critical_products, and recent_movements."},
+    {"criterion":"Cadastro e consulta de produtos","name":"admin-creates-product","lane":"browser","status":"passed","evidence":"Admin created TSCHECK-UI-PRODUCT and its table row displayed SKU and Saudável status."},
+    {"criterion":"Cadastro e consulta de produtos","name":"test_tscheck_products","lane":"backend","status":"passed","evidence":"POST /api/products returned 200 for a unique fixture and GET /api/products contained its returned id; duplicate SKU returned 409."},
+    {"criterion":"Entradas e saídas de estoque","name":"movement-updates-history","lane":"browser","status":"passed","evidence":"UI registered a tscheck ui entrada movement and displayed the reason in movement history."},
+    {"criterion":"Entradas e saídas de estoque","name":"test_tscheck_movements","lane":"backend","status":"passed","evidence":"POST /api/movements returned 200; GET /api/products showed created fixture stock increased; negative stock returned 422."},
+    {"criterion":"Previsão estatística e recomendações","name":"forecast-recommendations","lane":"browser","status":"flaky","evidence":"Initial run hit strict-mode duplicate text assertion; corrected exact heading assertion and rerun passed model explanation, recommendations table, and 30-day selector."},
+    {"criterion":"Previsão estatística e recomendações","name":"test_tscheck_forecast","lane":"backend","status":"passed","evidence":"GET /api/forecast?days=7,15,30,60 returned 200 with model name; invalid 8-day horizon returned 422."},
+    {"criterion":"Permissões por perfil","name":"operator-role-permissions","lane":"browser","status":"passed","evidence":"Operator UI showed products without Novo produto, and import dropzone disabled with admin-only message."},
+    {"criterion":"Permissões por perfil","name":"test_tscheck_permissions","lane":"backend","status":"passed","evidence":"Operator GET /api/products and /api/dashboard returned 200; POST /api/products and POST /api/import/products returned 403."},
+    {"criterion":"Importação e exportação CSV","name":"csv-import-export","lane":"browser","status":"flaky","evidence":"Initial run did not observe transient toast text; corrected flow asserted download, preview, 200 import response, and imported fixture row on rerun."},
+    {"criterion":"Importação e exportação CSV","name":"test_tscheck_import","lane":"backend","status":"passed","evidence":"Admin POST /api/import/products returned 200 with imported=1 and GET /api/products contained the imported fixture SKU."},
+    {"criterion":"Responsividade e ausência de erros críticos","name":"responsive-main-flow","lane":"browser","status":"passed","evidence":"Desktop 1280x720 login, dashboard, theme toggle, and products navigation rendered without blank screen; screenshot captured."}
+  ]
+}

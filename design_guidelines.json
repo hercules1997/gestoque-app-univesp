@@ -1,0 +1,230 @@
+{
+  "project_title": "StokOS ML - Sistema Inteligente de Apoio à Decisão de Estoque",
+  "app_type": "dashboard",
+  "context_strategy": "High-density decision-support dashboard designed for small business operators and admins. Emphasizes quick visual scanning of inventory health, statistical ML demand forecasting, actionable replenishment recommendations, role-based access control (Admin vs Operator), and seamless CSV/Excel data operations.",
+  "theme_configuration": {
+    "default_mode": "light",
+    "support_toggle": true,
+    "archetype": "SWISS & HIGH-CONTRAST + PERFORMANCE MINIMALISM",
+    "emotional_tone": "Precise, reliable, decision-driven, modern, actionable"
+  },
+  "typography": {
+    "heading_font": "Plus Jakarta Sans, sans-serif",
+    "body_font": "IBM Plex Sans, sans-serif",
+    "numeric_mono_font": "Geist Mono, JetBrains Mono, monospace",
+    "forbidden_heading_font": "Inter",
+    "hierarchy": {
+      "h1_dashboard_header": "text-2xl sm:text-3xl font-bold tracking-tight",
+      "h2_section_header": "text-xl sm:text-2xl font-semibold tracking-tight",
+      "h3_card_header": "text-base sm:text-lg font-semibold tracking-normal",
+      "body": "text-sm text-slate-700 dark:text-slate-300 leading-normal",
+      "small_label": "text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400",
+      "kpi_value": "text-2xl sm:text-3xl font-extrabold tracking-tight font-mono"
+    }
+  },
+  "color_palette": {
+    "background_light": "#F8FAFC",
+    "background_dark": "#0F172A",
+    "surface_light": "#FFFFFF",
+    "surface_dark": "#1E293B",
+    "card_border_light": "rgba(226, 232, 240, 0.8)",
+    "card_border_dark": "rgba(255, 255, 255, 0.08)",
+    "primary": {
+      "main": "#2563EB",
+      "hover": "#1D4ED8",
+      "light": "#EFF6FF",
+      "dark_accent": "#3B82F6",
+      "text_on_primary": "#FFFFFF"
+    },
+    "signal_colors": {
+      "critical_out_of_stock": {
+        "text": "#991B1B",
+        "bg": "#FEE2E2",
+        "border": "#FCA5A5",
+        "dark_text": "#FCA5A5",
+        "dark_bg": "rgba(153, 27, 27, 0.2)"
+      },
+      "low_stock_warning": {
+        "text": "#92400E",
+        "bg": "#FEF3C7",
+        "border": "#FCD34D",
+        "dark_text": "#FCD34D",
+        "dark_bg": "rgba(146, 64, 14, 0.2)"
+      },
+      "healthy_stock": {
+        "text": "#065F46",
+        "bg": "#D1FAE5",
+        "border": "#6EE7B7",
+        "dark_text": "#6EE7B7",
+        "dark_bg": "rgba(6, 95, 70, 0.2)"
+      },
+      "excess_overstock": {
+        "text": "#5B21B6",
+        "bg": "#EDE9FE",
+        "border": "#C4B5FD",
+        "dark_text": "#C4B5FD",
+        "dark_bg": "rgba(91, 33, 182, 0.2)"
+      },
+      "ml_forecast_cyan": {
+        "text": "#155E75",
+        "bg": "#CFFAFE",
+        "border": "#67E8F9",
+        "dark_text": "#67E8F9",
+        "dark_bg": "rgba(21, 94, 117, 0.2)"
+      }
+    },
+    "forbidden_colors": ["#1B93A4", "#7351B7"]
+  },
+  "layout_architecture": {
+    "header_nav": {
+      "type": "Top sticky navigation + secondary breadcrumb bar",
+      "background": "backdrop-blur-md bg-white/90 dark:bg-slate-900/90 border-b border-slate-200 dark:border-slate-800 z-40",
+      "elements": [
+        "Brand Logo (StokOS ML with signal badge)",
+        "Global Search Input (Product SKU, Name, Category)",
+        "Quick Actions (+ Entrada/Saída, Importar CSV)",
+        "Role Switcher / User Profile (Admin vs Operador indicator)",
+        "Theme Toggle Button",
+        "Notification Bell for Critical Alerts"
+      ]
+    },
+    "grid_system": "MODE B - High Density Bento Grid (gap-4 md:gap-6)",
+    "page_structure": [
+      {
+        "page_id": "dashboard",
+        "title": "Visão Geral & Central de Decisão",
+        "sections": [
+          "KPI Summary Strip (Valor Total em Estoque, Itens Críticos, Previsão de Falta 7d, Taxa de Giro)",
+          "Decision Banner (AI/ML Recommendations: Recomendações Prioritárias de Compra)",
+          "Main Grid (Left 2 cols: Demanda vs Estoque Atual - Chart Recharts; Right 1 col: Alertas Críticos de Reposição)",
+          "Stock Health Distribution (Donut Chart & Category Breakdown)",
+          "Recent Transactions Ledger (Últimas Entradas e Saídas)"
+        ]
+      },
+      {
+        "page_id": "products",
+        "title": "Catálogo & Cadastro de Produtos",
+        "sections": [
+          "Filter & Search Bar (Category, Status, Stock Level, Search SKU/Name)",
+          "Product Table with Status Badges, ML Forecasted Days of Inventory, Minimum Safety Stock, Actions (Editar, Movimentar, Historico)",
+          "Product Detail / Edit Modal (Form with Validation: SKU, Nome, Categoria, Preço Custo, Preço Venda, Estoque Mínimo, Ponto de Pedido, Fornecedor)"
+        ]
+      },
+      {
+        "page_id": "movements",
+        "title": "Movimentações de Entrada e Saída",
+        "sections": [
+          "Quick Register Movement Card (+ Nova Entrada / - Nova Saída)",
+          "Movement History Table (Data, SKU/Produto, Tipo [Entrada/Saída/Ajuste], Quantidade, Motivo, Usuário Operador/Admin)",
+          "Filters by Date Range, Type, and User"
+        ]
+      },
+      {
+        "page_id": "forecast_recommendations",
+        "title": "Previsão Estatística de Demanda & Recomendação de Compra",
+        "sections": [
+          "ML Prediction Engine Header (Explicabilidade do modelo estatístico simples: Média Móvel Ponderada + Tendência Histórica)",
+          "Interactive Forecast Simulator (Ajustar Período: 7, 15, 30 ou 60 dias)",
+          "Smart Order Suggestion Table (Produto, Estoque Atual, Demanda Prevista, Sugestão de Compra [Qtd], Custo Estimado, Prioridade [Urgente/Normal/Baixa], Botão 'Gerar Pedido')",
+          "Historical vs Predicted Demand Chart for selected product"
+        ]
+      },
+      {
+        "page_id": "import_export",
+        "title": "Importação & Exportação de Planilhas",
+        "sections": [
+          "Drag & Drop CSV/Excel File Uploader with preview parser",
+          "Data Mapping & Validation View (Identify invalid SKUs, missing quantities, errors before commit)",
+          "Download Sample Templates (CSV de Produtos, CSV de Movimentações)",
+          "Export Data Section (Exportar Estoque Atual, Histórico de Movimentações, Relatório de Previsão em Excel/CSV)"
+        ]
+      },
+      {
+        "page_id": "users_roles",
+        "title": "Gestão de Usuários & Perfis (Admin / Operador)",
+        "sections": [
+          "Current Active Profile Status Banner (Shows permissions for Admin vs Operador)",
+          "User List Table (Nome, Email, Perfil [Administrador / Operador], Status, Último Acesso)",
+          "Role Capabilities Matrix (Admin: Acesso total, Cadastro, Configuração ML, Importar/Exportar; Operador: Movimentações, Consulta, Registrar Entrada/Saída)"
+        ]
+      }
+    ]
+  },
+  "component_guidelines": {
+    "shadcn_primitives": [
+      "Use Shadcn Dialog/Sheet for Product Form & Movement Drawer",
+      "Use Shadcn Select for Category, Movement Type, Role Switcher",
+      "Use Shadcn Table with sticky header and crisp borders",
+      "Use Shadcn Badge with custom signal color variants",
+      "Use Shadcn Tabs for switching between Forecast views and Historical charts",
+      "Use Shadcn Tooltip for ML explanation and metric calculations",
+      "Use Sonner for toast notifications (e.g. 'Movimentação registrada com sucesso', 'Estoque crítico alertado')"
+    ],
+    "charts": {
+      "library": "recharts",
+      "theme": "Use semi-transparent fills with high-contrast lines. Tooltip must match dark/light theme with border-border.",
+      "types": [
+        "AreaChart: Demanda Histórica vs Previsão de Vendas (Line 1: Real, Line 2 Dash: Previsão ML)",
+        "BarChart: Comparativo por Categoria (Estoque Mínimo vs Estoque Atual)",
+        "PieChart/Donut: Distribuição da Saúde do Estoque (Saudável, Baixo, Crítico, Excesso)"
+      ]
+    }
+  },
+  "testing_attributes": {
+    "mandatory_rule": "ALL interactive and key informational elements MUST include a data-testid attribute in kebab-case.",
+    "required_test_ids": [
+      "data-testid='header-brand-logo'",
+      "data-testid='role-switcher-dropdown'",
+      "data-testid='current-role-badge'",
+      "data-testid='theme-toggle-button'",
+      "data-testid='global-search-input'",
+      "data-testid='kpi-total-inventory-value'",
+      "data-testid='kpi-critical-stock-count'",
+      "data-testid='kpi-forecast-shortage-count'",
+      "data-testid='btn-new-movement'",
+      "data-testid='btn-add-product'",
+      "data-testid='btn-import-csv'",
+      "data-testid='btn-export-data'",
+      "data-testid='nav-dashboard-link'",
+      "data-testid='nav-products-link'",
+      "data-testid='nav-movements-link'",
+      "data-testid='nav-forecast-link'",
+      "data-testid='nav-import-export-link'",
+      "data-testid='nav-users-link'",
+      "data-testid='product-table'",
+      "data-testid='product-table-row-{sku}'",
+      "data-testid='movement-table'",
+      "data-testid='recommendations-table'",
+      "data-testid='forecast-period-selector'",
+      "data-testid='csv-file-dropzone'",
+      "data-testid='modal-add-product'",
+      "data-testid='modal-add-movement'",
+      "data-testid='input-product-name'",
+      "data-testid='input-product-sku'",
+      "data-testid='input-product-quantity'",
+      "data-testid='input-product-min-stock'",
+      "data-testid='btn-save-product'",
+      "data-testid='btn-confirm-movement'"
+    ]
+  },
+  "micro_interactions_and_motion": {
+    "hover_states": "hover:border-primary/50 hover:shadow-sm transition-all duration-200",
+    "button_press": "active:scale-[0.98] transition-transform",
+    "cards": "border rounded-xl bg-card text-card-foreground shadow-xs p-5 hover:border-slate-300 dark:hover:border-slate-700 transition-colors",
+    "stagger_entrances": "Use lightweight motion opacity/y transitions for table rows and KPI cards"
+  },
+  "accessibility_guidance": {
+    "contrast": "Minimum 4.5:1 contrast ratio on body text and badge text. Ensure alert badges have strong readable text over tinted background.",
+    "focus_states": "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 outline-none",
+    "keyboard_navigation": "All table action buttons, search inputs, modal triggers must be accessible via Tab and Enter/Space keys.",
+    "screen_reader_labels": "Use aria-label on icon-only buttons (e.g. edit, delete, theme-toggle, refresh forecast)."
+  },
+  "instructions_to_main_agent": [
+    "Build the dashboard in Portuguese ('pt-BR') as per the problem statement.",
+    "Ensure both 'Administrador' and 'Operador' role modes can be toggled to demonstrate permission restrictions (Operador can view and register movements but cannot delete products or change ML settings).",
+    "Provide pre-populated demo data showcasing realistic products (e.g., eletrônicos, vestuário, autopeças, alimentos) with historical stock movements, out-of-stock warnings, and statistical forecast recommendations.",
+    "Implement the statistical forecast engine in backend/frontend using weighted moving average + trend factor for demand calculation.",
+    "Ensure CSV import has a working parser and preview dialog, and Excel/CSV export triggers a download of sample datasets.",
+    "Apply all data-testid attributes specified in testing_attributes."
+  ]
+}
