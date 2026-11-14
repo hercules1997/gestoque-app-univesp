@@ -61,7 +61,20 @@ class Movement(BaseModel):
     reason: str
     user_name: str
     user_role: Role
+    stock_before: int | None = None
+    stock_after: int | None = None
+    sale_price_at_movement: float | None = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+
+class ABCItem(BaseModel):
+    sku: str
+    name: str
+    units_sold: int
+    sales_value: float
+    cumulative_percent: float
+    classification: Literal["A", "B", "C"]
+    estimated_units: int
 
 
 class ForecastItem(BaseModel):

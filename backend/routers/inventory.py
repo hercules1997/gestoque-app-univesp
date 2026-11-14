@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from lib.dates import today_iso
 from lib.db import db
 from models.inventory import (
+    ABCItem,
     DashboardResponse,
     ForecastItem,
     ForecastResponse,
@@ -302,11 +303,75 @@ async def create_movement(payload: MovementCreate, user: dict = Depends(current_
         reason=payload.reason,
         user_name=user["name"],
         user_role=user["role"],
+        stock_before=product.stock,
+        stock_after=next_stock,
+        sale_price_at_movement=product.sale_price,
         created_at=now,
     )
-    await db.movements.insert_one(movement.model_dump())
-    await db.products.update_one({"id": product.id}, {"$set": {"stock": next_stock, "updated_at": now}})
+    # A conditional write rejects operations calculated from a stale balance.
+    updated = await db.products.update_one(
+        {"id": product.id, "stock": product.stock, "updated_at": product_raw.get("updated_at")},
+        {"$set": {"stock": next_stock, "updated_at": now, "last_movement_id": movement.id}},
+    )
+    if not updated.matched_count:
+        raise HTTPException(status_code=409, detail="O saldo mudou. Atualize e tente novamente.")
+    try:
+        await db.movements.insert_one(movement.model_dump())
+    except Exception:
+        # Preserve subsequent updates if another operation has already changed the product.
+        await db.products.update_one(
+            {"id": product.id, "last_movement_id": movement.id, "updated_at": now},
+            {"$set": {"stock": product.stock, "updated_at": now}, "$unset": {"last_movement_id": ""}},
+        )
+        raise
     return movement
+
+
+@router.get("/analytics/abc", response_model=list[ABCItem])
+async def sales_abc(user: dict = Depends(current_user)):
+    start = datetime.now(timezone.utc) - timedelta(days=90)
+    products = await db.products.find({}, {"id": 1, "sku": 1, "name": 1, "sale_price": 1}).to_list(None)
+    totals = {
+        p["id"]: dict(sku=p["sku"], name=p["name"], units_sold=0, cents=0, estimated_units=0)
+        for p in products
+    }
+    prices = {p["id"]: p["sale_price"] for p in products}
+    async for row in db.movements.find({"type": "saida", "created_at": {"$gte": start}}):
+        product_id = row["product_id"]
+        item = totals.get(product_id)
+        price = row.get("sale_price_at_movement")
+        if item is None:
+            if price is None:
+                continue
+            item = totals.setdefault(product_id, dict(
+                sku=row["product_sku"], name=row["product_name"], units_sold=0, cents=0, estimated_units=0
+            ))
+        quantity = row["quantity"]
+        if price is None:
+            price = prices[product_id]
+            item["estimated_units"] += quantity
+        item["units_sold"] += quantity
+        item["cents"] += quantity * round(price * 100)
+
+    ordered = sorted(totals.values(), key=lambda item: (-item["cents"], item["sku"]))
+    total = sum(item["cents"] for item in ordered)
+    cumulative = 0
+    result = []
+    for item in ordered:
+        cents = item["cents"]
+        classification = "C"
+        if cents:
+            if cumulative * 100 < total * 80:
+                classification = "A"
+            elif cumulative * 100 < total * 95:
+                classification = "B"
+        cumulative += cents
+        result.append(ABCItem(
+            sku=item["sku"], name=item["name"], units_sold=item["units_sold"],
+            sales_value=cents / 100, cumulative_percent=round(100 * cumulative / total, 2) if total else 0,
+            classification=classification, estimated_units=item["estimated_units"],
+        ))
+    return result
 
 
 @router.get("/forecast", response_model=ForecastResponse)
