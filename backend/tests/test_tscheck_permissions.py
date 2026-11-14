@@ -6,7 +6,7 @@ def product_payload(sku):
 
 
 def test_operator_can_consult_and_cannot_admin_actions(client):
-    login(client, "operador@stokos.demo", "Operador123!")
+    login(client, "operador@gestoque.com", "Operador123!")
     assert client.get("/products").status_code == 200
     assert client.get("/dashboard").status_code == 200
     assert client.post("/products", json=product_payload("tscheck-permission-product")).status_code == 403

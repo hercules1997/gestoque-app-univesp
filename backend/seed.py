@@ -14,8 +14,8 @@ def password_hash(value: str) -> str:
 async def seed() -> None:
     await ensure_indexes()
     users = [
-        {"id": "user-admin-demo", "name": "Rafael Luiz", "email": "admin@stokos.demo", "password_hash": password_hash("Admin123!"), "role": "admin", "last_access": None},
-        {"id": "user-operator-demo", "name": "Rafael Lima", "email": "operador@stokos.demo", "password_hash": password_hash("Operador123!"), "role": "operator", "last_access": None},
+        {"id": "user-admin-demo", "name": "Rafael Luiz", "email": "admin@gestoque.com", "password_hash": password_hash("Admin123!"), "role": "admin", "last_access": None},
+        {"id": "user-operator-demo", "name": "Rafael Lima", "email": "operador@gestoque.com", "password_hash": password_hash("Operador123!"), "role": "operator", "last_access": None},
     ]
     for user in users:
         await db.users.update_one({"id": user["id"]}, {"$set": user}, upsert=True)

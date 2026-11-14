@@ -1,4 +1,4 @@
-# StokOS ML — Documentação Técnica
+# Gestoque — Documentação Técnica
 
 **Sistema web de apoio à decisão para gestão inteligente de estoque em pequenas empresas**
 
@@ -461,8 +461,8 @@ O frontend redireciona as chamadas `/api` para o backend na porta 8001 (configur
 
 | Perfil | Nome | E-mail | Senha |
 |---|---|---|---|
-| Administrador | Rafael Luiz | `admin@stokos.demo` | `Admin123!` |
-| Operador | Rafael Lima | `operador@stokos.demo` | `Operador123!` |
+| Administrador | Rafael Luiz | `admin@gestoque.com` | `Admin123!` |
+| Operador | Rafael Lima | `operador@gestoque.com` | `Operador123!` |
 
 > Executar `python seed.py` novamente **restaura os saldos de estoque** dos 6 produtos de demonstração e **recria o histórico de vendas**. As movimentações registradas manualmente são preservadas.
 

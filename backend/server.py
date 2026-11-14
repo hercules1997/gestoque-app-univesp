@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, APIRouter
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
+from starlette.staticfiles import StaticFiles
 import os
 import logging
 from pathlib import Path
@@ -20,10 +21,21 @@ load_dotenv(ROOT_DIR / '.env')
 from lib.db import client, db, ensure_indexes
 
 
+async def migrate_demo_emails() -> None:
+    for role in ("admin", "operator"):
+        account = f"{role}@gestoque.com" if role == "admin" else "operador@gestoque.com"
+        old_email = account.replace("@gestoque.com", "@stokos.demo")
+        await db.users.update_one(
+            {"id": f"user-{role}-demo", "email": old_email, "role": role},
+            {"$set": {"email": account}},
+        )
+
+
 async def seed_if_empty() -> None:
     """A fresh database (e.g. the first production deploy) gets the demo users, products and history.
     Never runs when users already exist, so real data is never overwritten."""
     try:
+        await migrate_demo_emails()
         if await db.users.count_documents({}) == 0:
             from seed import seed
             await seed()
@@ -60,7 +72,7 @@ class StatusCheckCreate(BaseModel):
 # Add your routes to the router instead of directly to app
 @api_router.get("/")
 async def root():
-    return {"message": "StokOS ML API", "status": "online"}
+    return {"message": "Gestoque API", "status": "online"}
 
 @api_router.post("/status", response_model=StatusCheck)
 async def create_status_check(input: StatusCheckCreate):
@@ -93,3 +105,7 @@ api_router.include_router(inventory_router)
 
 # Include the router in the main app as the final registration statement.
 app.include_router(api_router)
+
+static_dir = ROOT_DIR / "static"
+if static_dir.is_dir():
+    app.mount("/", StaticFiles(directory=static_dir, html=True), name="frontend")
